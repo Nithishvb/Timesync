@@ -6,23 +6,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Clock } from "lucide-react";
-import { SuggestedTimes } from "@/lib/constants";
 
 interface SuggestedTimeProps {
   setSelectedTime: (val: string) => void;
+  title: string;
+  placeholder: string;
+  suggestedTimes: string[]
 }
 
-export const SuggestedTime = ({ setSelectedTime }: SuggestedTimeProps) => {
+export const SuggestedTime = ({
+  setSelectedTime,
+  title,
+  placeholder,
+  suggestedTimes
+}: SuggestedTimeProps) => {
   return (
     <>
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold">Suggested Times</h3>
+        <h3 className="text-lg font-semibold">{title}</h3>
         <Select onValueChange={setSelectedTime}>
           <SelectTrigger>
-            <SelectValue placeholder="Select a time slot" />
+            <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>
-            {SuggestedTimes.map((time, index) => (
+            {suggestedTimes.map((time, index) => (
               <SelectItem key={index} value={time}>
                 <div className="flex items-center">
                   <Clock className="mr-2 h-4 w-4" />

@@ -13,6 +13,7 @@ import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { AddParticipant } from "./_component/AddParticipant";
 import { SuggestedTime } from "./_component/SuggestedTimes";
+import { SuggestedTimes } from "@/lib/constants";
 
 export const Meeting = () => {
   const [participants, setParticipants] = useState<string[]>([""]);
@@ -64,7 +65,12 @@ export const Meeting = () => {
             </Card>
           </div>
 
-          <SuggestedTime setSelectedTime={setSelectedTime} />
+          <SuggestedTime
+            setSelectedTime={setSelectedTime}
+            title={"Suggested Times"}
+            placeholder={"Select a time slot"}
+            suggestedTimes={SuggestedTimes}
+          />
         </CardContent>
         <CardFooter>
           <Button onClick={scheduleAndRedirect} className="w-full">
