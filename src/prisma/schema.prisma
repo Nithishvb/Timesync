@@ -18,11 +18,18 @@ model User {
 }
 
 model UserAvailability {
-  availabilityId String   @id @default(uuid()) @db.Uuid
-  userId         String   @db.Uuid
-  dayOfWeek      Int      
-  timeZone       String   
-  createdAt      DateTime @default(now())
+  id        Int   @id @default(autoincrement())
+  userId    String
+  dayId     Int
 
-  user            User     @relation(fields: [userId], references: [userId])
+  user      User @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  day       Day  @relation(fields: [dayId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dayId])
+}
+
+model Day {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  availabilities  UserAvailability[]
 }
