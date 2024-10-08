@@ -4,7 +4,7 @@ export const userApi = createApi({
   reducerPath: "userApi",
   refetchOnFocus: true,
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api/user/",
+    baseUrl: process.env.API_URL,
   }),
   endpoints: (builder) => ({
     getUsers: builder.query({
@@ -12,7 +12,7 @@ export const userApi = createApi({
     }),
     createAvailability: builder.mutation({
       query: (body) => ({
-        url: "/availability",
+        url: "/availability/create",
         method: "POST",
         body,
       }),

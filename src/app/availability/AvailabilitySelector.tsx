@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AvailabilityStatus, DayOfWeek } from "@/lib/types";
 
 interface AvailabilitySelectorProps {
-  availability: AvailabilityStatus;
+  availability: AvailabilityStatus[];
   handleAvailabilityChange: (val: DayOfWeek) => void;
 }
 
@@ -19,17 +19,20 @@ export const AvailabilitySelector = ({
         <Label>Availability</Label>
         <Card>
           <CardContent className="p-4 grid gap-4">
-            {Object.entries(availability).map(([day, isAvailable]) => (
-              <div key={day} className="flex items-center justify-between">
-                <Label htmlFor={day} className="flex items-center space-x-2">
+            {availability.map((day: AvailabilityStatus) => (
+              <div key={day.id} className="flex items-center justify-between">
+                <Label
+                  htmlFor={day.day}
+                  className="flex items-center space-x-2"
+                >
                   <Clock className="h-4 w-4" />
-                  <span>{day}</span>
+                  <span>{day.day}</span>
                 </Label>
                 <Switch
-                  id={day}
-                  checked={isAvailable}
+                  id={JSON.stringify(day.id)}
+                  checked={day.active}
                   onCheckedChange={() =>
-                    handleAvailabilityChange(day as DayOfWeek)
+                    handleAvailabilityChange(day.day as DayOfWeek)
                   }
                 />
               </div>

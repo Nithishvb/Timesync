@@ -22,14 +22,26 @@ import { Save } from "lucide-react";
 import { AvailabilitySelector } from "./AvailabilitySelector";
 import { AvailabilityDays, TimeZones } from "@/lib/constants";
 import { AvailabilityStatus, DayOfWeek } from "@/lib/types";
+import { LoadingButton } from "@/components/ui/LoadingButton";
+import { useCreateAvailabilityMutation } from "@/store/services/userAvailability";
+import { useRouter } from "next/navigation";
 
 export const Availability = () => {
   const [timeZone, setTimeZone] = useState("");
   const [availability, setAvailability] =
-    useState<AvailabilityStatus>(AvailabilityDays);
+    useState<AvailabilityStatus[]>(AvailabilityDays);
+
+  const [createAvailability, { isLoading }] = useCreateAvailabilityMutation();
+  const router = useRouter();
 
   const handleAvailabilityChange = (day: DayOfWeek) => {
-    setAvailability((prev) => ({ ...prev, [day]: !prev[day] }));
+    setAvailability((prev) => 
+      prev.map((item) => 
+        item.day === day 
+          ? { ...item, active: !item.active  } 
+          : item
+      )
+    );
   };
 
   const autoDetectTimeZone = () => {
@@ -37,9 +49,18 @@ export const Availability = () => {
     setTimeZone(detectedTimeZone);
   };
 
-  const saveAndRedirect = () => {
-    console.log("Saving availability:", { timeZone, availability });
-    console.log("Redirecting to dashboard...");
+  const handleSaveAvailability = async () => {
+    try {
+      const selectedAvailability = availability.filter((day) => day.active === true);
+      const data = {
+        timeZone,
+        availability: selectedAvailability,
+      };
+      await createAvailability(data);
+      router.push('/dashboard');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -78,9 +99,13 @@ export const Availability = () => {
           />
         </CardContent>
         <CardFooter>
-          <Button onClick={saveAndRedirect} className="w-full">
+          <LoadingButton
+            onClick={handleSaveAvailability}
+            className="w-full"
+            loading={isLoading}
+          >
             <Save className="mr-2 h-4 w-4" /> Save Availability
-          </Button>
+          </LoadingButton>
         </CardFooter>
       </Card>
     </>

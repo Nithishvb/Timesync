@@ -8,5 +8,7 @@ export type DayOfWeek =
   | "Sunday";
 
 export type AvailabilityStatus = {
-  [key in DayOfWeek]: boolean;
+  id: number;
+  day: string;
+  active: boolean;
 };
